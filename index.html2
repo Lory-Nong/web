@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="L의 캐릭터 프로필">
+<title>L's Profile</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%230a0a0a'/><text x='50' y='71' font-size='62' font-family='sans-serif' font-weight='700' text-anchor='middle' fill='white'>L</text></svg>">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+:root {
+  --bg: #ffffff;
+  --text: #0a0a0a;
+  --muted: #6e6e6e;
+  --accent: #2f6fd6;
+  --line: #e6e6e6;
+  --photo-a: #f3f3f3;
+  --photo-b: #fafafa;
+  --photo-c: #e4e4e4;
+  --haze: rgba(255, 255, 255, .45);
+  --grain: .07;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --gutter: clamp(20px, 5vw, 40px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --text: #f5f5f5;
+    --muted: #9a9a9a;
+    --accent: #6ea8ff;
+    --line: #262626;
+    --photo-a: #141414;
+    --photo-b: #0a0a0a;
+    --photo-c: #1f1f1f;
+    --haze: rgba(0, 0, 0, .45);
+    --grain: .09;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  line-height: 1.7;
+  word-break: keep-all;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--text);
+  color: var(--bg);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 100;
+  pointer-events: none;
+  opacity: var(--grain);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1.2s steps(4) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); }
+  75% { transform: translate(-2%, -1%); }
+  100% { transform: translate(0, 0); }
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+.section,
+footer {
+  position: relative;
+}
+
+.section::before,
+footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 1px;
+  background: var(--line);
+}
+
+.hero-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--photo-a), var(--photo-b) 55%, var(--photo-c));
+}
+
+.hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 55%;
+  filter: saturate(.9) contrast(.94) brightness(1.04);
+  animation: drift 24s ease-in-out infinite alternate;
+}
+
+.hero-photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, var(--haze) 100%);
+}
+
+.hero-photo:empty::after {
+  content: "사진 자리";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 15px;
+  letter-spacing: .1em;
+}
+
+@keyframes drift {
+  from { transform: scale(1); }
+  to { transform: scale(1.06) translateY(-1%); }
+}
+
+.caption {
+  margin-top: 14px;
+  padding: 0 var(--gutter);
+  font-size: 12px;
+  letter-spacing: .14em;
+  color: var(--muted);
+  text-align: right;
+}
+
+.intro {
+  padding-top: clamp(40px, 7vw, 80px);
+  padding-bottom: clamp(64px, 10vw, 120px);
+}
+
+h1 {
+  font-size: clamp(48px, 11vw, 120px);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -.035em;
+}
+
+.section {
+  padding-top: clamp(64px, 10vw, 120px);
+  padding-bottom: clamp(64px, 10vw, 120px);
+}
+
+.section-head {
+  margin-bottom: clamp(28px, 5vw, 56px);
+}
+
+.num {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--accent);
+}
+
+h2 {
+  font-size: clamp(28px, 4.5vw, 44px);
+  line-height: 1.25;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+
+.about-text {
+  font-size: clamp(17px, 2vw, 20px);
+}
+
+.about-text p + p {
+  margin-top: 1em;
+}
+
+.info {
+  border-top: 1px solid var(--line);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 7em 1fr;
+  gap: 16px;
+  padding: 18px 2px;
+  border-bottom: 1px solid var(--line);
+}
+
+.row dt {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.row dd {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.quote p {
+  font-size: clamp(24px, 3.6vw, 38px);
+  line-height: 1.45;
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+
+footer {
+  padding-top: 40px;
+  padding-bottom: 56px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .hero {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 20px 20px 0;
+  }
+
+  .hero-photo {
+    aspect-ratio: 16 / 9;
+    max-height: 82vh;
+    border-radius: 28px;
+  }
+
+  .caption {
+    padding: 0 6px;
+  }
+}
+
+@media (min-width: 860px) {
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+  }
+
+  .split .section-head {
+    margin-bottom: 0;
+  }
+}
+
+.glitch {
+  letter-spacing: .08em;
+  text-shadow: 3px 0 var(--accent), -3px 0 var(--muted);
+}
+
+.js .reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.1s var(--ease), transform 1.1s var(--ease);
+}
+
+.js .hero-photo.reveal {
+  transform: scale(1.04);
+  transition: opacity 1.6s var(--ease), transform 1.6s var(--ease);
+}
+
+.js .reveal.show {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body::after,
+  .hero-photo img {
+    animation: none;
+  }
+
+  .js .reveal,
+  .js .hero-photo.reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-photo reveal"><img src="photo.jpg" alt=""></div>
+  <p class="caption reveal">이곳에 와 본 적 있나요?</p>
+</header>
+
+<main>
+  <section class="intro wrap">
+    <h1 class="reveal">L's Profile</h1>
+  </section>
+
+  <section class="section wrap split" id="about">
+    <div class="section-head reveal">
+      <span class="num">01</span>
+      <h2>소개</h2>
+    <div class="about-text reveal">
+      <p></p>
+    </div>
+  </section>
+
+  <section class="section wrap split" id="profile">
+    <div class="section-head reveal">
+      <span class="num">02</span>
+      <h2>프로필</h2>
+    </div>
+    <dl class="info">
+      <div class="row reveal"><dt>이름</dt><dd>L</dd></div>
+      <div class="row reveal"><dt>나이</dt><dd>?</dd></div>
+      <div class="row reveal"><dt>생일</dt><dd>?</dd></div>
+      <div class="row reveal"><dt>키</dt><dd>?</dd></div>
+      <div class="row reveal"><dt>좋아하는 것</dt><dd>?</dd></div>
+      <div class="row reveal"><dt>싫어하는 것</dt><dd>?</dd></div>
+    </dl>
+  </section>
+
+  <section class="section wrap split" id="quote">
+    <div class="section-head reveal">
+      <span class="num">03</span>
+      <h2>친구야.</h2>
+    </div>
+    <blockquote class="quote reveal">
+      <p>“평생 내 곁에 남아있어줘.”</p>
+    </blockquote>
+  </section>
+</main>
+
+<footer class="wrap">© 2026 L</footer>
+
+<script>
+const io = new IntersectionObserver((entries) => {
+  entries.filter((e) => e.isIntersecting).forEach((e, i) => {
+    e.target.style.transitionDelay = i * 0.15 + 's';
+    e.target.classList.add('show');
+    io.unobserve(e.target);
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+const whispers = ['깨어나', '이건 꿈이야', '누가 보고 있어', '돌아갈 수 없어', '아직 거기 있니', '그것을 바라봐서는 안돼', '너는 내 곁에서 떠날수 없어', '눈을 뜨면 안돼'];
+const marks = Array.from({ length: 112 }, (_, i) => String.fromCharCode(0x300 + i));
+const pick = (list) => list[Math.floor(Math.random() * list.length)];
+const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+const dwell = new Map();
+let busy = false;
+let last = 0;
+
+const creep = (text) => {
+  const phrase = pick(whispers);
+  let out = phrase;
+  while (out.length < text.length) out += ' ' + phrase;
+  return [...out.slice(0, Math.max(text.length, phrase.length))]
+    .map((c) => c === ' ' ? c : c + Array.from({ length: Math.floor(Math.random() * 3) }, () => pick(marks)).join(''))
+    .join('');
+};
+
+const glitch = (el) => {
+  busy = true;
+  const html = el.innerHTML;
+  el.style.height = el.offsetHeight + 'px';
+  el.textContent = creep(el.textContent.trim());
+  el.classList.add('glitch');
+  setTimeout(() => {
+    el.innerHTML = html;
+    el.classList.remove('glitch');
+    el.style.height = '';
+    busy = false;
+  }, 100);
+};
+
+const zone = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (e.isIntersecting) dwell.set(e.target, performance.now());
+    else dwell.delete(e.target);
+  });
+}, { threshold: 0.5, rootMargin: '-15% 0px -15% 0px' });
+
+document.querySelectorAll('h1, h2, h3, p, dd').forEach((el) => zone.observe(el));
+
+setInterval(() => {
+  const now = performance.now();
+  if (busy || calm.matches || document.hidden || now - last < 6000) return;
+  for (const [el, since] of dwell) {
+    if (now - since < 5000) continue;
+    dwell.set(el, now);
+    if (Math.random() < 0.35) {
+      glitch(el);
+      last = now;
+      break;
+    }
+  }
+}, 500);
+</script>
+</body>
+</html>
