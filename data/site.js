@@ -1,5 +1,5 @@
 window.SITE = {
-  "title": "LuL's Website",
+  "title": "주인장 웹사이트",
   "subtitle": "플롯 모음집입니다.",
   "whispers": [
     "깨어나",
@@ -81,16 +81,51 @@ window.SITE = {
       "soon": false,
       "image": "photo.jpg",
       "v": 1793267346391
+    },
+    {
+      "id": "mvtfuhougdir",
+      "slug": "",
+      "title": "대학교 철벽녀가 나를 좋아하는것같다",
+      "listTitle": "",
+      "caption": "",
+      "about": {
+        "heading": "소개",
+        "text": ""
+      },
+      "info": {
+        "heading": "정보",
+        "rows": [
+          [
+            "이름",
+            ""
+          ],
+          [
+            "나이",
+            ""
+          ],
+          [
+            "키",
+            ""
+          ]
+        ]
+      },
+      "quote": {
+        "heading": "한마디",
+        "text": ""
+      },
+      "soon": true,
+      "image": "",
+      "v": 0
     }
   ],
   "links": [
     {
-      "label": "카카오톡 오픈프로필",
-      "url": ""
+      "label": "카카오톡",
+      "url": "https://open.kakao.com/me/Nong_si"
     },
     {
       "label": "이메일",
-      "url": ""
+      "url": "mailto:Lu.official.Email@gmail.com"
     }
   ]
 };
