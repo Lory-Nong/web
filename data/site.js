@@ -120,12 +120,12 @@ window.SITE = {
   ],
   "links": [
     {
-      "label": "농",
+      "label": "카카오톡",
       "url": "https://open.kakao.com/me/Nong_si"
     },
     {
-      "label": "농",
-      "url": "Lu.official.Email"
+      "label": "이메일",
+      "url": "mailto:Lu.official.Email"
     }
   ]
 };
