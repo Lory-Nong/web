@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Developer</title>
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/common.css">
+<style>
+body::after {
+  display: none;
+}
+
+.wrap {
+  max-width: 820px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.screen {
+  padding-top: clamp(40px, 8vw, 88px);
+  padding-bottom: 96px;
+}
+
+.narrow {
+  max-width: 440px;
+}
+
+h1 {
+  font-size: clamp(32px, 6vw, 48px);
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -.03em;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+}
+
+.lead {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bar .tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.panel {
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.panel > .bar {
+  margin-bottom: 18px;
+}
+
+form {
+  display: grid;
+  gap: 18px;
+  margin-top: 28px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+label small,
+.hint {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--text);
+}
+
+input[readonly] {
+  color: var(--muted);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--text);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .2s;
+}
+
+.btn:hover {
+  border-color: var(--text);
+}
+
+.btn.primary {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+.btn.small {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.btn:disabled {
+  opacity: .5;
+  cursor: wait;
+}
+
+.icon {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.icon:hover {
+  border-color: var(--text);
+}
+
+.link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--muted);
+  font: inherit;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.steps {
+  margin-top: 20px;
+  padding: 18px 20px 18px 38px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.steps li + li {
+  margin-top: 6px;
+}
+
+.steps b {
+  color: var(--text);
+}
+
+.plots {
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.plots li {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.plots li.empty {
+  display: block;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.mini {
+  width: 64px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 10px;
+  background: linear-gradient(160deg, var(--photo-a), var(--photo-b) 55%, var(--photo-c));
+}
+
+.mini img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.meta strong {
+  display: block;
+  font-size: 16px;
+}
+
+.meta span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.plots .tools {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.preview {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 14px;
+  background: linear-gradient(160deg, var(--photo-a), var(--photo-b) 55%, var(--photo-c));
+}
+
+.preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+fieldset {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+legend {
+  padding: 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--accent);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) 36px;
+  gap: 8px;
+  align-items: center;
+}
+
+.rows {
+  display: grid;
+  gap: 8px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 200;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 12px 20px;
+  border-radius: 14px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 14px;
+  transform: translateX(-50%);
+}
+
+.toast.error {
+  background: #c62828;
+  color: #ffffff;
+}
+
+@media (min-width: 640px) {
+  .plots li {
+    grid-template-columns: 80px 1fr auto;
+  }
+
+  .mini {
+    width: 80px;
+  }
+
+  .plots .tools {
+    grid-column: auto;
+  }
+}
+</style>
+</head>
+<body>
+
+<section class="screen wrap" data-screen="loading">
+  <p class="lead">불러오는 중…</p>
+</section>
+
+<section class="screen wrap narrow" data-screen="login" hidden>
+  <h1>Developer</h1>
+  <p class="lead">관리자만 들어올 수 있어요.</p>
+  <form id="login-form">
+    <label>아이디<input type="text" id="login-id" autocomplete="username" required></label>
+    <label>비밀번호<input type="password" id="login-pw" autocomplete="current-password" required></label>
+    <button class="btn primary" type="submit">로그인</button>
+  </form>
+  <p class="lead"><button class="link" type="button" data-act="to-setup">처음 설정 · 토큰 바꾸기</button></p>
+</section>
+
+<section class="screen wrap narrow" data-screen="setup" hidden>
+  <h1>관리자 설정</h1>
+  <p class="lead">GitHub 토큰을 아이디·비밀번호로 잠가서 저장소에 올려요. 비밀번호는 어디에도 저장되지 않아요.</p>
+  <ol class="steps">
+    <li>GitHub → 프로필 사진 → <b>Settings</b> → 맨 아래 <b>Developer settings</b></li>
+    <li><b>Personal access tokens</b> → <b>Fine-grained tokens</b> → <b>Generate new token</b></li>
+    <li>Repository access: <b>Only select repositories</b> → <b>web</b></li>
+    <li>Permissions: <b>Contents</b> → <b>Read and write</b></li>
+    <li><b>Generate token</b> → <b>github_pat_</b>로 시작하는 토큰 복사</li>
+  </ol>
+  <form id="setup-form">
+    <label>아이디<input type="text" id="setup-id" autocomplete="username" required></label>
+    <label>비밀번호<input type="password" id="setup-pw" autocomplete="new-password" required></label>
+    <label>비밀번호 확인<input type="password" id="setup-pw2" autocomplete="new-password" required></label>
+    <label>GitHub 토큰 <small>로그인한 상태에서 비밀번호만 바꿀 때는 비워 두세요.</small><input type="password" id="setup-token" autocomplete="off"></label>
+    <div class="actions">
+      <button class="btn primary" type="submit">설정 저장</button>
+      <button class="btn" type="button" data-act="to-login">취소</button>
+    </div>
+  </form>
+</section>
+
+<section class="screen wrap" data-screen="dash" hidden>
+  <div class="bar">
+    <h1>Developer</h1>
+    <div class="tools">
+      <a class="btn small" href="../" target="_blank" rel="noopener">사이트 보기</a>
+      <button class="btn small" type="button" data-act="logout">로그아웃</button>
+    </div>
+  </div>
+  <p class="lead">저장하면 사이트에는 1~2분 뒤에 반영돼요.</p>
+
+  <div class="panel">
+    <div class="bar">
+      <h2>플롯</h2>
+      <div class="tools">
+        <button class="btn small" type="button" data-act="order-save" id="order-save" hidden>순서 저장</button>
+        <button class="btn small primary" type="button" data-act="new">+ 새 플롯</button>
+      </div>
+    </div>
+    <ul class="plots" id="plot-list"></ul>
+  </div>
+
+  <div class="panel">
+    <h2>사이트 설정</h2>
+    <form id="settings-form">
+      <label>사이트 제목<input type="text" id="set-title"></label>
+      <label>한 줄 문구<input type="text" id="set-sub"></label>
+      <label>깨진 글자 문장 <small>한 줄에 한 문장씩 적어 주세요.</small><textarea id="set-whispers"></textarea></label>
+      <div class="actions"><button class="btn primary" type="submit">설정 저장</button></div>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2>계정</h2>
+    <p class="lead">아이디·비밀번호를 바꾸거나, 토큰이 만료됐을 때 새 토큰으로 바꿔요.</p>
+    <div class="actions" style="margin-top: 16px"><button class="btn" type="button" data-act="to-setup">아이디·비밀번호·토큰 바꾸기</button></div>
+  </div>
+</section>
+
+<section class="screen wrap" data-screen="edit" hidden>
+  <button class="link" type="button" data-act="back">← 목록으로</button>
+  <h1 id="edit-title" style="margin-top: 16px">새 플롯</h1>
+  <form id="edit-form">
+    <label>주소 <small>영문·숫자·-·_ 만. 예: L → 사이트주소/L. 만든 뒤에는 바꿀 수 없어요.</small><input type="text" id="f-slug" autocomplete="off"></label>
+    <label>제목 <small>페이지 맨 위 큰 제목</small><input type="text" id="f-title" required></label>
+    <label>목록 제목 <small>홈 목록에 보일 이름. 비우면 제목과 같아요.</small><input type="text" id="f-list"></label>
+    <label>대표 그림 <small>올리면 자동으로 1MB 아래로 줄여요.</small><input type="file" id="f-image" accept="image/*"></label>
+    <div class="preview" id="f-preview"></div>
+    <p class="hint" id="f-image-info"></p>
+    <label>그림 아래 작은 문구<input type="text" id="f-caption"></label>
+
+    <fieldset>
+      <legend>01</legend>
+      <label>섹션 제목<input type="text" id="f-about-h"></label>
+      <label>소개글 <small>빈 줄을 넣으면 문단이 나뉘어요.</small><textarea id="f-about"></textarea></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>02</legend>
+      <label>섹션 제목<input type="text" id="f-info-h"></label>
+      <div class="rows" id="f-rows"></div>
+      <div><button class="btn small" type="button" data-act="row-add">+ 항목 추가</button></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>03</legend>
+      <label>섹션 제목<input type="text" id="f-quote-h"></label>
+      <label>한마디<textarea id="f-quote"></textarea></label>
+    </fieldset>
+
+    <label class="check"><input type="checkbox" id="f-soon">미완성 <small>홈 목록에서 흐리게 보이고 누를 수 없어요.</small></label>
+
+    <div class="actions">
+      <button class="btn primary" type="submit">저장</button>
+      <button class="btn" type="button" data-act="back">취소</button>
+    </div>
+  </form>
+</section>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

@@ -109,41 +109,21 @@ a.item:hover .arrow {
 }
 </style>
 </head>
-<body>
+<body data-view="home">
 
 <header class="top wrap">
-  <h1 class="reveal">LuL's Website</h1>
-  <p class="sub reveal">플롯 모음집입니다.</p>
+  <h1 class="reveal" data-site-title>LuL's Website</h1>
+  <p class="sub reveal" data-site-sub>플롯 모음집입니다.</p>
 </header>
 
 <main class="wrap">
-  <ul class="list">
-    <li class="reveal">
-      <a class="item" href="L/">
-        <div class="thumb"><img src="L/photo.jpg" alt="" loading="lazy"></div>
-        <div>
-          <span class="path">/L</span>
-          <h2>L's Profile</h2>
-        </div>
-        <span class="arrow">→</span>
-      </a>
-    </li>
-    <li class="reveal">
-      <div class="item soon">
-        <div class="thumb"></div>
-        <div>
-          <span class="path">/???</span>
-          <h2>미완성 됨</h2>
-        </div>
-      </div>
-    </li>
-  </ul>
+  <ul class="list" id="plots"></ul>
 </main>
 
 <footer class="wrap">
   <span>© 2026 Lu</span>
 </footer>
 
-<script src="assets/dream.js"></script>
+<script src="assets/boot.js"></script>
 </body>
 </html>

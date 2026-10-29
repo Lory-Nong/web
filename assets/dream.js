@@ -15,7 +15,8 @@ const io = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
 
-const whispers = ['깨어나', '여기는 꿈이 아니야', '누가 보고 있어', '돌아갈 수 없어', '아직 거기 있니', '문을 열지 마', '너를 기억하고 있어', '눈을 감아'];
+const custom = window.SITE && Array.isArray(window.SITE.whispers) ? window.SITE.whispers.filter(Boolean) : [];
+const whispers = custom.length ? custom : ['깨어나', '여기는 꿈이 아니야', '누가 보고 있어', '돌아갈 수 없어', '아직 거기 있니', '문을 열지 마', '너를 기억하고 있어', '눈을 감아'];
 const marks = Array.from({ length: 112 }, (_, i) => String.fromCharCode(0x300 + i));
 const pick = (list) => list[Math.floor(Math.random() * list.length)];
 const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
