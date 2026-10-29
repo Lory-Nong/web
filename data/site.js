@@ -116,6 +116,41 @@ window.SITE = {
       "soon": true,
       "image": "",
       "v": 0
+    },
+    {
+      "id": "mvti4pfn29s6",
+      "slug": "Shadow",
+      "title": "밝은 빛 뒤에는 그림자가 진다",
+      "listTitle": "",
+      "caption": "저기! 가오리다!",
+      "about": {
+        "heading": "나한테서 떠나지 말아줘",
+        "text": ""
+      },
+      "info": {
+        "heading": "정보",
+        "rows": [
+          [
+            "이름",
+            "이하나"
+          ],
+          [
+            "나이",
+            "25"
+          ],
+          [
+            "키",
+            "151"
+          ]
+        ]
+      },
+      "quote": {
+        "heading": "",
+        "text": ""
+      },
+      "soon": false,
+      "image": "photo.jpg",
+      "v": 1793275835642
     }
   ],
   "links": [
