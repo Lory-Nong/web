@@ -81,6 +81,41 @@ window.SITE = {
       "soon": false,
       "image": "photo.jpg",
       "v": 1793267346391
+    },
+    {
+      "id": "mvtfuhougdir",
+      "slug": "",
+      "title": "대학교 철벽녀가 나를 좋아하는것같다",
+      "listTitle": "",
+      "caption": "",
+      "about": {
+        "heading": "소개",
+        "text": ""
+      },
+      "info": {
+        "heading": "정보",
+        "rows": [
+          [
+            "이름",
+            ""
+          ],
+          [
+            "나이",
+            ""
+          ],
+          [
+            "키",
+            ""
+          ]
+        ]
+      },
+      "quote": {
+        "heading": "한마디",
+        "text": ""
+      },
+      "soon": true,
+      "image": "",
+      "v": 0
     }
   ],
   "links": [
