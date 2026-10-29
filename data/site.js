@@ -151,6 +151,149 @@ window.SITE = {
       "soon": true,
       "image": "",
       "v": 0
+    },
+    {
+      "id": "cgffhrv",
+      "slug": "want-hero",
+      "title": "같이 일 하실래요?",
+      "listTitle": "",
+      "soon": false,
+      "image": "cqw70df.jpg",
+      "v": 1793284633172,
+      "characters": [
+        {
+          "id": "cqw70df",
+          "name": "남아린",
+          "color": "#7a5cd6",
+          "caption": "하하.. 이것 참.",
+          "image": "cqw70df.jpg",
+          "v": 1793284633172,
+          "about": {
+            "heading": "",
+            "text": ""
+          },
+          "info": {
+            "heading": "정보",
+            "rows": [
+              [
+                "이름",
+                ""
+              ],
+              [
+                "나이",
+                ""
+              ],
+              [
+                "키",
+                ""
+              ]
+            ]
+          },
+          "quote": {
+            "heading": "",
+            "text": "심심하네."
+          }
+        },
+        {
+          "id": "c3s2jpt",
+          "name": "백민서",
+          "color": "#00bfff",
+          "caption": "..뭘, 보세요.",
+          "image": "c3s2jpt.jpg",
+          "v": 1793284633201,
+          "about": {
+            "heading": "",
+            "text": ""
+          },
+          "info": {
+            "heading": "정보",
+            "rows": [
+              [
+                "이름",
+                ""
+              ],
+              [
+                "나이",
+                ""
+              ],
+              [
+                "키",
+                ""
+              ]
+            ]
+          },
+          "quote": {
+            "heading": "",
+            "text": ""
+          }
+        },
+        {
+          "id": "cfif97n",
+          "name": "안다영",
+          "color": "#e0567f",
+          "caption": "히히, 나 잘했지?",
+          "image": "cfif97n.jpg",
+          "v": 1793284633223,
+          "about": {
+            "heading": "소개",
+            "text": ""
+          },
+          "info": {
+            "heading": "정보",
+            "rows": [
+              [
+                "이름",
+                ""
+              ],
+              [
+                "나이",
+                ""
+              ],
+              [
+                "키",
+                ""
+              ]
+            ]
+          },
+          "quote": {
+            "heading": "",
+            "text": ""
+          }
+        },
+        {
+          "id": "cb65nf6",
+          "name": "한예담",
+          "color": "#ffd500",
+          "caption": "저기, 괜찮으세요?",
+          "image": "cb65nf6.jpg",
+          "v": 1793284633239,
+          "about": {
+            "heading": "",
+            "text": ""
+          },
+          "info": {
+            "heading": "정보",
+            "rows": [
+              [
+                "이름",
+                ""
+              ],
+              [
+                "나이",
+                ""
+              ],
+              [
+                "키",
+                ""
+              ]
+            ]
+          },
+          "quote": {
+            "heading": "",
+            "text": ""
+          }
+        }
+      ]
     }
   ],
   "links": [
