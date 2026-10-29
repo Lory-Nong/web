@@ -50,12 +50,12 @@ window.SITE = {
     {
       "id": "soon-1",
       "slug": "contract",
-      "title": "이건 분명 계약연애 였는데? [백설아]",
+      "title": "이건 분명 계약연애 였는데?",
       "listTitle": "",
       "caption": "이,이건.. 그냥 계약이니까. 오해하지마.",
       "about": {
-        "heading": "",
-        "text": ""
+        "heading": "정보",
+        "text": "이름\n\n나이\n\n키"
       },
       "info": {
         "heading": "",
