@@ -1,18 +1,14 @@
-const OWNER = 'Lory-Nong';
-const REPO = 'web';
-const BRANCH = 'main';
-const ITER = 600000;
-const API = `https://api.github.com/repos/${OWNER}/${REPO}`;
-const KEY = 'lul-admin-token';
+const SERVER = 'https://lul-admin.igm12345678a.workers.dev';
+const KEY = 'lul-admin-session';
 const DEFAULT_WHISPERS = ['깨어나', '여기는 꿈이 아니야', '누가 보고 있어', '돌아갈 수 없어', '아직 거기 있니', '문을 열지 마', '너를 기억하고 있어', '눈을 감아'];
+const LINK_PH = ['이름', '주소'];
 
 const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const enc = new TextEncoder();
-const dec = new TextDecoder();
 const rid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
-let token = null;
+let session = null;
 let site = null;
 let editing = null;
 let newImage = null;
@@ -51,102 +47,68 @@ const bytesToB64 = (bytes) => {
   for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
   return btoa(bin);
 };
-const b64ToBytes = (s) => Uint8Array.from(atob(s.replace(/\s/g, '')), (c) => c.charCodeAt(0));
 const textToB64 = (text) => bytesToB64(enc.encode(text));
 const blobToB64 = async (blob) => bytesToB64(new Uint8Array(await blob.arrayBuffer()));
 
-const derive = async (id, pw, salt, iter) => {
-  const base = await crypto.subtle.importKey('raw', enc.encode(id + '\n' + pw), 'PBKDF2', false, ['deriveKey']);
-  return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
-};
-
-const seal = async (id, pw, secret) => {
-  const salt = crypto.getRandomValues(new Uint8Array(16));
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const key = await derive(id, pw, salt, ITER);
-  const data = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(secret));
-  return { v: 1, iter: ITER, salt: bytesToB64(salt), iv: bytesToB64(iv), data: bytesToB64(new Uint8Array(data)) };
-};
-
-const unseal = async (id, pw, vault) => {
-  const key = await derive(id, pw, b64ToBytes(vault.salt), vault.iter);
-  const out = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64ToBytes(vault.iv) }, key, b64ToBytes(vault.data));
-  return dec.decode(out);
-};
-
-const loadVault = async () => {
-  try {
-    const res = await fetch(`${API}/contents/Developer/vault.json?ref=${BRANCH}&t=${Date.now()}`, { headers: { Accept: 'application/vnd.github.raw+json' }, cache: 'no-store' });
-    if (res.ok) return await res.json();
-    if (res.status === 404) return null;
-  } catch {}
-  try {
-    const res = await fetch(`vault.json?t=${Date.now()}`, { cache: 'no-store' });
-    if (res.ok) return await res.json();
-  } catch {}
-  return null;
-};
-
 const remember = (t) => {
-  token = t;
+  session = t;
   try { sessionStorage.setItem(KEY, t); } catch {}
 };
 
 const forget = () => {
-  token = null;
+  session = null;
   try { sessionStorage.removeItem(KEY); } catch {}
 };
 
-const gh = async (path, method = 'GET', body) => {
-  const res = await fetch(path ? `${API}/${path}` : API, {
-    method,
-    cache: 'no-store',
-    headers: {
-      Accept: 'application/vnd.github+json',
-      Authorization: `Bearer ${token}`,
-      'X-GitHub-Api-Version': '2022-11-28',
-      ...(body ? { 'Content-Type': 'application/json' } : {})
-    },
-    body: body ? JSON.stringify(body) : undefined
-  });
-  if (res.status === 404 && method === 'GET') return null;
-  if (!res.ok) {
-    let detail = '';
-    try { detail = (await res.json()).message || ''; } catch {}
-    if (res.status === 401) throw new Error('토큰이 만료됐거나 잘못됐어요. 계정에서 토큰을 바꿔 주세요.');
-    if (res.status === 403) throw new Error('토큰 권한이 부족해요. Contents 권한을 Read and write로 해 주세요.');
-    if (res.status === 409 || res.status === 422) throw new Error(`저장 중 충돌이 났어요. 새로고침 후 다시 해 주세요. (${detail})`);
-    throw new Error(`GitHub 오류 ${res.status} ${detail}`);
+const api = async (path, { method = 'GET', body, raw = false } = {}) => {
+  let res;
+  try {
+    res = await fetch(SERVER + path, {
+      method,
+      cache: 'no-store',
+      headers: {
+        ...(session ? { Authorization: `Bearer ${session}` } : {}),
+        ...(body !== undefined ? { 'Content-Type': 'application/json' } : {})
+      },
+      body: body === undefined ? undefined : typeof body === 'string' ? body : JSON.stringify(body)
+    });
+  } catch {
+    throw new Error('서버에 연결할 수 없어요. 인터넷 연결을 확인해 주세요.');
   }
-  return res.status === 204 ? null : res.json();
+  if (res.status === 401 && path !== '/login') {
+    forget();
+    site = null;
+    show('login');
+  }
+  if (raw && (res.ok || res.status === 404)) return res;
+  let data = null;
+  try { data = await res.json(); } catch {}
+  if (!res.ok) throw new Error((data && data.error) || `서버 오류 ${res.status}`);
+  return data;
 };
 
 const commit = async (message, files) => {
-  const ref = await gh(`git/ref/heads/${BRANCH}`);
-  const head = await gh(`git/commits/${ref.object.sha}`);
-  const tree = [];
+  const list = [];
   for (const f of files) {
     if (f.content == null) {
-      tree.push({ path: f.path, mode: '100644', type: 'blob', sha: null });
+      list.push({ path: f.path, sha: null });
     } else {
-      const blob = await gh('git/blobs', 'POST', { content: f.content, encoding: 'base64' });
-      tree.push({ path: f.path, mode: '100644', type: 'blob', sha: blob.sha });
+      const blob = await api('/blob', { method: 'POST', body: JSON.stringify({ content: f.content, encoding: 'base64' }) });
+      list.push({ path: f.path, sha: blob.sha });
     }
   }
-  const next = await gh('git/trees', 'POST', { base_tree: head.tree.sha, tree });
-  const made = await gh('git/commits', 'POST', { message, tree: next.sha, parents: [ref.object.sha] });
-  await gh(`git/refs/heads/${BRANCH}`, 'PATCH', { sha: made.sha });
+  await api('/commit', { method: 'POST', body: { message, files: list } });
 };
 
 const readSite = async () => {
-  const file = await gh(`contents/data/site.js?ref=${BRANCH}`);
-  const data = file
-    ? JSON.parse(dec.decode(b64ToBytes(file.content)).replace(/^\s*window\.SITE\s*=\s*/, '').replace(/;\s*$/, ''))
-    : {};
+  const res = await api('/site', { raw: true });
+  const text = res.status === 404 ? '' : await res.text();
+  const data = text.trim() ? JSON.parse(text.replace(/^\s*window\.SITE\s*=\s*/, '').replace(/;\s*$/, '')) : {};
   data.title = data.title || '';
   data.subtitle = data.subtitle || '';
   data.whispers = Array.isArray(data.whispers) ? data.whispers : [];
   data.plots = Array.isArray(data.plots) ? data.plots : [];
+  data.links = Array.isArray(data.links) ? data.links : [];
   data.plots.forEach((p, i) => { p.id = p.id || p.slug || `item-${i}`; });
   return data;
 };
@@ -201,6 +163,10 @@ const toJpeg = async (file) => {
 
 const thumbSrc = (p) => (p.slug && p.image ? `../${encodeURIComponent(p.slug)}/${encodeURIComponent(p.image)}?v=${p.v || 0}` : '');
 
+const addRow = (box, k = '', v = '', ph = ['항목', '내용']) => {
+  $(box).insertAdjacentHTML('beforeend', `<div class="pair"><input type="text" class="k" placeholder="${ph[0]}" value="${esc(k)}"><input type="text" class="v" placeholder="${ph[1]}" value="${esc(v)}"><button class="icon" type="button" data-act="row-del" aria-label="항목 삭제">×</button></div>`);
+};
+
 const renderDash = () => {
   $('#plot-list').innerHTML = site.plots.length
     ? site.plots.map((p) => `
@@ -219,10 +185,8 @@ const renderDash = () => {
   $('#set-title').value = site.title;
   $('#set-sub').value = site.subtitle;
   $('#set-whispers').value = (site.whispers.length ? site.whispers : DEFAULT_WHISPERS).join('\n');
-};
-
-const addRow = (k = '', v = '') => {
-  $('#f-rows').insertAdjacentHTML('beforeend', `<div class="pair"><input type="text" class="k" placeholder="항목" value="${esc(k)}"><input type="text" class="v" placeholder="내용" value="${esc(v)}"><button class="icon" type="button" data-act="row-del" aria-label="항목 삭제">×</button></div>`);
+  $('#set-links').innerHTML = '';
+  site.links.forEach((l) => addRow('#set-links', l.label, l.url, LINK_PH));
 };
 
 const openEditor = (plot) => {
@@ -251,7 +215,7 @@ const openEditor = (plot) => {
   $('#f-image-info').textContent = '';
   $('#f-preview').innerHTML = thumbSrc(p) ? `<img src="${esc(thumbSrc(p))}" alt="">` : '';
   $('#f-rows').innerHTML = '';
-  ((p.info && p.info.rows) || []).forEach((r) => addRow(r[0], r[1]));
+  ((p.info && p.info.rows) || []).forEach((r) => addRow('#f-rows', r[0], r[1]));
   show('edit');
 };
 
@@ -272,8 +236,7 @@ const collect = () => ({
 });
 
 const enter = async () => {
-  const repo = await gh('');
-  if (!repo) throw new Error('저장소를 찾을 수 없어요. 토큰의 저장소 설정을 확인해 주세요.');
+  await api('/me');
   site = await readSite();
   renderDash();
   show('dash');
@@ -282,51 +245,13 @@ const enter = async () => {
 $('#login-form').addEventListener('submit', (e) => {
   e.preventDefault();
   run(e.submitter || $('#login-form button'), '확인 중…', async () => {
-    const vault = await loadVault();
-    if (!vault) {
-      show('setup');
-      throw new Error('아직 관리자 설정이 안 돼 있어요. 먼저 설정해 주세요.');
-    }
-    let secret;
-    try {
-      secret = await unseal($('#login-id').value.trim(), $('#login-pw').value, vault);
-    } catch {
-      throw new Error('아이디 또는 비밀번호가 맞지 않아요.');
-    }
-    remember(secret);
+    const data = await api('/login', { method: 'POST', body: { id: $('#login-id').value.trim(), password: $('#login-pw').value } });
     $('#login-pw').value = '';
+    remember(data.token);
     try {
       await enter();
     } catch (err) {
       forget();
-      throw err;
-    }
-  });
-});
-
-$('#setup-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  run(e.submitter || $('#setup-form button'), '저장 중…', async () => {
-    const id = $('#setup-id').value.trim();
-    const pw = $('#setup-pw').value;
-    if (pw !== $('#setup-pw2').value) throw new Error('비밀번호 확인이 달라요.');
-    const prev = token;
-    const next = $('#setup-token').value.trim() || prev;
-    if (!next) throw new Error('GitHub 토큰을 넣어 주세요.');
-    remember(next);
-    try {
-      const repo = await gh('');
-      if (!repo) throw new Error('토큰으로 web 저장소에 접근할 수 없어요. 토큰 설정을 확인해 주세요.');
-      const vault = await seal(id, pw, token);
-      await commit('관리자 계정 설정', [{ path: 'Developer/vault.json', content: textToB64(JSON.stringify(vault, null, 2) + '\n') }]);
-      ['#setup-pw', '#setup-pw2', '#setup-token'].forEach((s) => { $(s).value = ''; });
-      site = await readSite();
-      renderDash();
-      show('dash');
-      toast('설정을 저장했어요. 다음부터는 아이디·비밀번호로 로그인하면 돼요.');
-    } catch (err) {
-      if (prev) remember(prev);
-      else forget();
       throw err;
     }
   });
@@ -338,6 +263,9 @@ $('#settings-form').addEventListener('submit', (e) => {
     fresh.title = $('#set-title').value.trim();
     fresh.subtitle = $('#set-sub').value.trim();
     fresh.whispers = $('#set-whispers').value.split('\n').map((s) => s.trim()).filter(Boolean);
+    fresh.links = [...document.querySelectorAll('#set-links .pair')]
+      .map((r) => ({ label: r.querySelector('.k').value.trim(), url: r.querySelector('.v').value.trim() }))
+      .filter((l) => l.label || l.url);
   }));
 });
 
@@ -395,8 +323,6 @@ document.addEventListener('click', (e) => {
   const li = el.closest('li[data-id]');
   const plot = li && site ? site.plots.find((p) => p.id === li.dataset.id) : null;
 
-  if (act === 'to-setup') show('setup');
-  if (act === 'to-login') show(token ? 'dash' : 'login');
   if (act === 'logout') {
     forget();
     site = null;
@@ -405,7 +331,8 @@ document.addEventListener('click', (e) => {
   if (act === 'new') openEditor(null);
   if (act === 'back') show('dash');
   if (act === 'edit' && plot) openEditor(plot);
-  if (act === 'row-add') addRow();
+  if (act === 'row-add') addRow('#f-rows');
+  if (act === 'link-add') addRow('#set-links', '', '', LINK_PH);
   if (act === 'row-del') el.closest('.pair').remove();
 
   if ((act === 'up' || act === 'down') && li) {
@@ -431,22 +358,17 @@ document.addEventListener('click', (e) => {
       const target = fresh.plots.find((p) => p.id === plot.id);
       fresh.plots = fresh.plots.filter((p) => p.id !== plot.id);
       if (!target || !target.slug) return [];
-      const list = await gh(`contents/${encodeURIComponent(target.slug)}?ref=${BRANCH}`);
-      return Array.isArray(list) ? list.filter((f) => f.type === 'file').map((f) => ({ path: f.path, content: null })) : [];
+      const list = await api(`/list?dir=${encodeURIComponent(target.slug)}`);
+      return list.filter((f) => f.type === 'file').map((f) => ({ path: f.path, content: null }));
     }));
   }
 });
 
 (async () => {
-  if (!window.crypto || !crypto.subtle) {
-    show('login');
-    toast('https:// 주소로 접속해야 관리자 기능을 쓸 수 있어요.', true);
-    return;
-  }
   let saved = null;
   try { saved = sessionStorage.getItem(KEY); } catch {}
   if (saved) {
-    token = saved;
+    session = saved;
     try {
       await enter();
       return;
@@ -455,5 +377,5 @@ document.addEventListener('click', (e) => {
       toast(e.message, true);
     }
   }
-  show((await loadVault()) ? 'login' : 'setup');
+  show('login');
 })();

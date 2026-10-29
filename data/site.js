@@ -82,5 +82,15 @@ window.SITE = {
       "image": "photo.jpg",
       "v": 1793267346391
     }
+  ],
+  "links": [
+    {
+      "label": "카카오톡 오픈프로필",
+      "url": ""
+    },
+    {
+      "label": "이메일",
+      "url": ""
+    }
   ]
 };
