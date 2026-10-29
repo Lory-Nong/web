@@ -49,12 +49,10 @@ window.SITE = {
     },
     {
       "id": "soon-1",
-      "slug": "",
-      "title": "미완성 됨",
+      "slug": "contract",
+      "title": "이건 분명 계약연애 였는데? [백설아]",
       "listTitle": "",
-      "caption": "",
-      "image": "",
-      "v": 0,
+      "caption": "이,이건.. 그냥 계약이니까. 오해하지마.",
       "about": {
         "heading": "",
         "text": ""
@@ -67,7 +65,9 @@ window.SITE = {
         "heading": "",
         "text": ""
       },
-      "soon": true
+      "soon": true,
+      "image": "photo.jpg",
+      "v": 1793267346391
     }
   ]
 };
