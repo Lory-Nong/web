@@ -1,5 +1,5 @@
 window.SITE = {
-  "title": "LuL's Website",
+  "title": "주인장 웹사이트",
   "subtitle": "플롯 모음집입니다.",
   "whispers": [
     "깨어나",
@@ -85,12 +85,12 @@ window.SITE = {
   ],
   "links": [
     {
-      "label": "카카오톡 오픈프로필",
-      "url": ""
+      "label": "농",
+      "url": "https://open.kakao.com/me/Nong_si"
     },
     {
-      "label": "이메일",
-      "url": ""
+      "label": "농",
+      "url": "Lu.official.Email"
     }
   ]
 };
