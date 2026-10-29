@@ -163,6 +163,11 @@ const toJpeg = async (file) => {
 
 const thumbSrc = (p) => (p.slug && p.image ? `../${encodeURIComponent(p.slug)}/${encodeURIComponent(p.image)}?v=${p.v || 0}` : '');
 
+const setPreview = (src) => {
+  $('#f-preview').innerHTML = src ? `<img src="${esc(src)}" alt="">` : '';
+  $('#f-picker').classList.toggle('has-image', Boolean(src));
+};
+
 const addRow = (box, k = '', v = '', ph = ['항목', '내용']) => {
   $(box).insertAdjacentHTML('beforeend', `<div class="pair"><input type="text" class="k" placeholder="${ph[0]}" value="${esc(k)}"><input type="text" class="v" placeholder="${ph[1]}" value="${esc(v)}"><button class="icon" type="button" data-act="row-del" aria-label="항목 삭제">×</button></div>`);
 };
@@ -213,7 +218,7 @@ const openEditor = (plot) => {
   $('#f-soon').checked = Boolean(p.soon);
   $('#f-image').value = '';
   $('#f-image-info').textContent = '';
-  $('#f-preview').innerHTML = thumbSrc(p) ? `<img src="${esc(thumbSrc(p))}" alt="">` : '';
+  setPreview(thumbSrc(p));
   $('#f-rows').innerHTML = '';
   ((p.info && p.info.rows) || []).forEach((r) => addRow('#f-rows', r[0], r[1]));
   show('edit');
@@ -269,17 +274,34 @@ $('#settings-form').addEventListener('submit', (e) => {
   }));
 });
 
-$('#f-image').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
+const useImage = async (file) => {
   if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    toast('그림 파일만 올릴 수 있어요.', true);
+    return;
+  }
   try {
     newImage = await toJpeg(file);
-    $('#f-preview').innerHTML = `<img src="${URL.createObjectURL(newImage)}" alt="">`;
+    setPreview(URL.createObjectURL(newImage));
     $('#f-image-info').textContent = `${Math.round(newImage.size / 1024)}KB로 줄여서 올려요.`;
   } catch {
     newImage = null;
     toast('그림을 읽을 수 없어요. 다른 파일로 해 주세요.', true);
   }
+};
+
+$('#f-image').addEventListener('change', (e) => useImage(e.target.files[0]));
+
+const picker = $('#f-picker');
+picker.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  picker.classList.add('drag');
+});
+picker.addEventListener('dragleave', () => picker.classList.remove('drag'));
+picker.addEventListener('drop', (e) => {
+  e.preventDefault();
+  picker.classList.remove('drag');
+  useImage(e.dataTransfer.files[0]);
 });
 
 $('#edit-form').addEventListener('submit', (e) => {
