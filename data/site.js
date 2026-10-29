@@ -54,12 +54,25 @@ window.SITE = {
       "listTitle": "",
       "caption": "이,이건.. 그냥 계약이니까. 오해하지마.",
       "about": {
-        "heading": "정보",
-        "text": "이름\n\n나이\n\n키"
+        "heading": "난 너 안 좋아한다고..!",
+        "text": ""
       },
       "info": {
         "heading": "",
-        "rows": []
+        "rows": [
+          [
+            "이름",
+            "백설아"
+          ],
+          [
+            "나이",
+            "21세"
+          ],
+          [
+            "키",
+            "162"
+          ]
+        ]
       },
       "quote": {
         "heading": "",
