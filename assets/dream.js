@@ -56,6 +56,17 @@ const zone = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('h1, h2, h3, p, dd').forEach((el) => zone.observe(el));
 
+document.addEventListener('dream:refresh', () => {
+  for (const el of [...dwell.keys()]) {
+    if (!el.isConnected) {
+      dwell.delete(el);
+      zone.unobserve(el);
+    }
+  }
+  document.querySelectorAll('.reveal:not(.show)').forEach((el) => io.observe(el));
+  document.querySelectorAll('h1, h2, h3, p, dd').forEach((el) => zone.observe(el));
+});
+
 setInterval(() => {
   const now = performance.now();
   if (busy || calm.matches || document.hidden || now - last < 6000) return;

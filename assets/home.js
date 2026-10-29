@@ -13,7 +13,10 @@
   if (list && Array.isArray(site.plots)) {
     list.innerHTML = site.plots.map((p) => {
       const thumb = p.slug && p.image ? `<img src="${esc(p.slug)}/${esc(p.image)}?v=${esc(p.v || 0)}" alt="" loading="lazy">` : '';
-      const body = `<div class="thumb">${thumb}</div><div><h2>${esc(p.listTitle || p.title)}</h2></div>`;
+      const names = Array.isArray(p.characters) && p.characters.length > 1
+        ? `<p class="cast-names">${p.characters.map((c) => esc(c.name)).filter(Boolean).join(' · ')}</p>`
+        : '';
+      const body = `<div class="thumb">${thumb}</div><div><h2>${esc(p.listTitle || p.title)}</h2>${names}</div>`;
       return p.slug && !p.soon
         ? `<li class="reveal"><a class="item" href="${esc(p.slug)}/">${body}<span class="arrow">→</span></a></li>`
         : `<li class="reveal"><div class="item soon">${body}</div></li>`;

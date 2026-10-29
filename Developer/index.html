@@ -407,24 +407,271 @@ legend {
   gap: 10px;
 }
 
+.screen:not([hidden]) {
+  animation: screen-in .5s var(--ease);
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
 .toast {
   position: fixed;
   left: 50%;
-  bottom: 24px;
+  bottom: max(20px, env(safe-area-inset-bottom));
   z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: max-content;
   max-width: calc(100% - 32px);
-  padding: 12px 20px;
-  border-radius: 14px;
+  padding: 12px 18px 12px 12px;
+  border-radius: 16px;
   background: var(--text);
   color: var(--bg);
   font-size: 14px;
-  transform: translateX(-50%);
+  font-weight: 500;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .22);
+  opacity: 0;
+  transform: translate(-50%, calc(100% + 40px));
+  transition: transform .6s cubic-bezier(.2, .9, .25, 1.14), opacity .35s var(--ease);
+  pointer-events: none;
+}
+
+.toast.on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.toast.bump {
+  animation: bump .45s var(--ease);
+}
+
+@keyframes bump {
+  35% {
+    transform: translate(-50%, -8px);
+  }
 }
 
 .toast.error {
-  background: #c62828;
+  background: #d93636;
   color: #ffffff;
+}
+
+.toast-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 20%, transparent);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.btn.busy::before {
+  content: "";
+  width: 13px;
+  height: 13px;
+  margin-right: 8px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.shake {
+  animation: shake .45s var(--ease);
+}
+
+@keyframes shake {
+  20%, 60% {
+    transform: translateX(-8px);
+  }
+
+  40%, 80% {
+    transform: translateX(8px);
+  }
+}
+
+.btn.danger {
+  color: #d93636;
+}
+
+.btn.danger:hover {
+  border-color: #d93636;
+}
+
+.cast-editor {
+  display: grid;
+  gap: 14px;
+  margin-top: 12px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease), transform .2s var(--ease);
+}
+
+.chip:hover {
+  border-color: var(--chip);
+  transform: translateY(-1px);
+}
+
+.chip i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--chip);
+  transition: background-color .35s var(--ease);
+}
+
+.chip.on {
+  border-color: var(--chip);
+  background: var(--chip);
+  color: var(--chip-ink);
+}
+
+.chip.on i {
+  background: var(--chip-ink);
+  opacity: .8;
+}
+
+.char-panel {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--cur, var(--text));
+  border-radius: 20px;
+  transition: border-color .45s var(--ease);
+}
+
+.char-panel.swap {
+  animation: panel-in .4s var(--ease);
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--dir, 14px));
+  }
+}
+
+.two {
+  display: grid;
+  gap: 18px;
+}
+
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+}
+
+.swatch {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  overflow: hidden;
+  border: 3px solid var(--bg);
+  border-radius: 50%;
+  background: var(--sw);
+  box-shadow: 0 0 0 1px var(--line);
+  cursor: pointer;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+
+.swatch:hover {
+  transform: scale(1.1);
+}
+
+.swatch.on {
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.swatch.custom {
+  background: conic-gradient(#ff5f5f, #ffd25f, #5fff8f, #5fd2ff, #8f5fff, #ff5fd2, #ff5f5f);
+}
+
+.swatch.custom input {
+  position: absolute;
+  inset: -8px;
+  width: calc(100% + 16px);
+  height: calc(100% + 16px);
+  opacity: 0;
+  cursor: pointer;
+}
+
+.char-tools {
+  justify-content: space-between;
+}
+
+.char-tools div {
+  display: flex;
+  gap: 8px;
+}
+
+.sticky-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  padding: 18px 0 22px;
+  background: linear-gradient(to top, var(--bg) 72%, transparent);
+}
+
+@media (min-width: 640px) {
+  .two {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen:not([hidden]),
+  .char-panel.swap,
+  .toast.bump,
+  .shake {
+    animation: none;
+  }
+
+  .toast {
+    transition: opacity .2s;
+  }
 }
 
 @media (min-width: 640px) {
@@ -505,8 +752,22 @@ legend {
   <h1 id="edit-title" style="margin-top: 16px">새 플롯</h1>
   <form id="edit-form">
     <label>주소 <small>영문·숫자·-·_ 만. 예: L → 사이트주소/L. 만든 뒤에는 바꿀 수 없어요.</small><input type="text" id="f-slug" autocomplete="off"></label>
-    <label>제목 <small>페이지 맨 위 큰 제목</small><input type="text" id="f-title" required></label>
-    <label>목록 제목 <small>홈 목록에 보일 이름. 비우면 제목과 같아요.</small><input type="text" id="f-list"></label>
+    <label>플롯 제목 <small>홈 목록과 페이지 위쪽에 보이는 이야기 제목</small><input type="text" id="f-title" required></label>
+    <label>목록 제목 <small>홈 목록에 보일 이름. 비우면 플롯 제목과 같아요.</small><input type="text" id="f-list"></label>
+    <label class="check"><input type="checkbox" id="f-soon">미완성 <small>홈 목록에서 흐리게 보이고 누를 수 없어요.</small></label>
+
+    <div class="cast-editor">
+      <div class="bar">
+        <h2>캐릭터</h2>
+        <button class="btn small" type="button" data-act="char-add">+ 캐릭터 추가</button>
+      </div>
+      <p class="hint">이름을 눌러 캐릭터를 바꿔 가며 적어요. 2명 이상이면 플롯 페이지 위에 이름 버튼이 생겨요.</p>
+      <div class="chips" id="f-cast" role="tablist"></div>
+    <div class="char-panel" id="f-char">
+    <div class="two">
+      <label>이름<input type="text" id="f-name" autocomplete="off"></label>
+      <div class="field"><span>색 <small>이 캐릭터로 넘어가면 페이지 색이 이 색으로 바뀌어요.</small></span><div class="swatches" id="f-swatches"></div></div>
+    </div>
     <div class="field">
       <span>대표 그림 <small>올리면 자동으로 1MB 아래로 줄여요.</small></span>
       <label class="picker" id="f-picker">
@@ -542,16 +803,24 @@ legend {
       <label>한마디<textarea id="f-quote"></textarea></label>
     </fieldset>
 
-    <label class="check"><input type="checkbox" id="f-soon">미완성 <small>홈 목록에서 흐리게 보이고 누를 수 없어요.</small></label>
+    <div class="actions char-tools">
+      <div>
+        <button class="btn small" type="button" data-act="char-left">← 앞으로</button>
+        <button class="btn small" type="button" data-act="char-right">뒤로 →</button>
+      </div>
+      <button class="btn small danger" type="button" data-act="char-del">이 캐릭터 삭제</button>
+    </div>
+    </div>
+    </div>
 
-    <div class="actions">
+    <div class="actions sticky-actions">
       <button class="btn primary" type="submit">저장</button>
       <button class="btn" type="button" data-act="back">취소</button>
     </div>
   </form>
 </section>
 
-<div class="toast" id="toast" role="status" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="admin.js"></script>
 </body>
