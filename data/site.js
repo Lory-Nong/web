@@ -78,7 +78,7 @@ window.SITE = {
         "heading": "",
         "text": ""
       },
-      "soon": true,
+      "soon": false,
       "image": "photo.jpg",
       "v": 1793267346391
     }
