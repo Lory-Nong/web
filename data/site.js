@@ -125,7 +125,7 @@ window.SITE = {
     },
     {
       "label": "이메일",
-      "url": "mailto:Lu.official.Email"
+      "url": "mailto:Lu.official.Email@gmail.com"
     }
   ]
 };
