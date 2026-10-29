@@ -1,0 +1,153 @@
+:root {
+  --bg: #ffffff;
+  --text: #0a0a0a;
+  --muted: #6e6e6e;
+  --accent: #2f6fd6;
+  --line: #e6e6e6;
+  --photo-a: #f3f3f3;
+  --photo-b: #fafafa;
+  --photo-c: #e4e4e4;
+  --haze: rgba(255, 255, 255, .45);
+  --grain: .07;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --gutter: clamp(20px, 5vw, 40px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --text: #f5f5f5;
+    --muted: #9a9a9a;
+    --accent: #6ea8ff;
+    --line: #262626;
+    --photo-a: #141414;
+    --photo-b: #0a0a0a;
+    --photo-c: #1f1f1f;
+    --haze: rgba(0, 0, 0, .45);
+    --grain: .09;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  line-height: 1.7;
+  word-break: keep-all;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--text);
+  color: var(--bg);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 100;
+  pointer-events: none;
+  opacity: var(--grain);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1.2s steps(4) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); }
+  75% { transform: translate(-2%, -1%); }
+  100% { transform: translate(0, 0); }
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+footer {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding-top: 40px;
+  padding-bottom: 56px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 1px;
+  background: var(--line);
+}
+
+footer a {
+  transition: color .3s;
+}
+
+footer a:hover {
+  color: var(--text);
+}
+
+.glitch {
+  letter-spacing: .08em;
+  text-shadow: 3px 0 var(--accent), -3px 0 var(--muted);
+}
+
+.js .reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.1s var(--ease), transform 1.1s var(--ease);
+}
+
+.js .reveal.show {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body::after {
+    animation: none;
+  }
+
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
