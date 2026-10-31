@@ -262,38 +262,47 @@ window.SITE = {
     },
     {
       "id": "mvtfuhougdir",
-      "slug": "",
-      "title": "대학교 철벽녀가 나를 좋아하는것같다",
+      "slug": "Promethium",
+      "title": "Promethium",
       "listTitle": "",
-      "caption": "",
-      "about": {
-        "heading": "소개",
-        "text": ""
-      },
-      "info": {
-        "heading": "정보",
-        "rows": [
-          [
-            "이름",
-            ""
-          ],
-          [
-            "나이",
-            ""
-          ],
-          [
-            "키",
-            ""
-          ]
-        ]
-      },
-      "quote": {
-        "heading": "한마디",
-        "text": ""
-      },
-      "soon": true,
-      "image": "",
-      "v": 0
+      "soon": false,
+      "image": "main.jpg",
+      "v": 1793450319007,
+      "characters": [
+        {
+          "id": "main",
+          "name": "아라벨라",
+          "color": "#d08a1e",
+          "caption": "네? 뭐라고요?",
+          "image": "main.jpg",
+          "v": 1793450319007,
+          "about": {
+            "heading": "Arabella",
+            "text": ""
+          },
+          "info": {
+            "heading": "정보",
+            "rows": [
+              [
+                "이름",
+                "아라벨라"
+              ],
+              [
+                "제조년도",
+                "1998년 6월 26일"
+              ],
+              [
+                "키",
+                "172"
+              ]
+            ]
+          },
+          "quote": {
+            "heading": "",
+            "text": ""
+          }
+        }
+      ]
     }
   ],
   "links": [
