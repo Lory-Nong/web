@@ -303,6 +303,54 @@ window.SITE = {
           }
         }
       ]
+    },
+    {
+      "id": "cmpx92n",
+      "slug": "Alone",
+      "title": "Alone",
+      "listTitle": "",
+      "soon": false,
+      "image": "cw255r9.jpg",
+      "v": 1793543660545,
+      "characters": [
+        {
+          "id": "cw255r9",
+          "name": "서하",
+          "color": "#e0567f",
+          "caption": "히힛, 실수로 다 태워먹었네?",
+          "image": "cw255r9.jpg",
+          "v": 1793543660545,
+          "about": {
+            "heading": "나는 혼자가 더 편한데.",
+            "text": ""
+          },
+          "info": {
+            "heading": "정보",
+            "rows": [
+              [
+                "이름",
+                "유서하"
+              ],
+              [
+                "나이",
+                "23"
+              ],
+              [
+                "키",
+                "143"
+              ],
+              [
+                "TMI",
+                "밥을 잘 못먹어서 키가 안컸다."
+              ]
+            ]
+          },
+          "quote": {
+            "heading": "",
+            "text": ""
+          }
+        }
+      ]
     }
   ],
   "links": [
