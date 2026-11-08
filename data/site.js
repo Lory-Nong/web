@@ -13,6 +13,83 @@ window.SITE = {
   ],
   "plots": [
     {
+      "id": "cetr1b9",
+      "slug": "Staff",
+      "title": "스태프! 물!",
+      "listTitle": "",
+      "soon": false,
+      "image": "cqddwp8.jpg",
+      "v": 1794115246684,
+      "characters": [
+        {
+          "id": "cqddwp8",
+          "name": "한나리",
+          "color": "#2f6fd6",
+          "caption": "스태프, 여행가자!",
+          "image": "cqddwp8.jpg",
+          "v": 1794115246684,
+          "about": {
+            "heading": "",
+            "text": ""
+          },
+          "info": {
+            "heading": "정보",
+            "rows": [
+              [
+                "이름",
+                "한나리"
+              ],
+              [
+                "나이",
+                "27세"
+              ],
+              [
+                "키",
+                "172"
+              ]
+            ]
+          },
+          "quote": {
+            "heading": "",
+            "text": ""
+          }
+        },
+        {
+          "id": "cbuslia",
+          "name": "유경빈",
+          "color": "#e0567f",
+          "caption": "딸기라떼 야르~",
+          "image": "cbuslia.jpg",
+          "v": 1794115246696,
+          "about": {
+            "heading": "",
+            "text": ""
+          },
+          "info": {
+            "heading": "정보",
+            "rows": [
+              [
+                "이름",
+                "유경빈"
+              ],
+              [
+                "나이",
+                "24"
+              ],
+              [
+                "키",
+                "163"
+              ]
+            ]
+          },
+          "quote": {
+            "heading": "",
+            "text": ""
+          }
+        }
+      ]
+    },
+    {
       "id": "L",
       "slug": "L",
       "title": "L",
@@ -342,83 +419,6 @@ window.SITE = {
               [
                 "TMI",
                 "밥을 잘 못먹어서 키가 안컸다."
-              ]
-            ]
-          },
-          "quote": {
-            "heading": "",
-            "text": ""
-          }
-        }
-      ]
-    },
-    {
-      "id": "cetr1b9",
-      "slug": "Staff",
-      "title": "스태프! 물!",
-      "listTitle": "",
-      "soon": false,
-      "image": "cqddwp8.jpg",
-      "v": 1794115246684,
-      "characters": [
-        {
-          "id": "cqddwp8",
-          "name": "한나리",
-          "color": "#2f6fd6",
-          "caption": "스태프, 여행가자!",
-          "image": "cqddwp8.jpg",
-          "v": 1794115246684,
-          "about": {
-            "heading": "",
-            "text": ""
-          },
-          "info": {
-            "heading": "정보",
-            "rows": [
-              [
-                "이름",
-                "한나리"
-              ],
-              [
-                "나이",
-                "27세"
-              ],
-              [
-                "키",
-                "172"
-              ]
-            ]
-          },
-          "quote": {
-            "heading": "",
-            "text": ""
-          }
-        },
-        {
-          "id": "cbuslia",
-          "name": "유경빈",
-          "color": "#e0567f",
-          "caption": "딸기라떼 야르~",
-          "image": "cbuslia.jpg",
-          "v": 1794115246696,
-          "about": {
-            "heading": "",
-            "text": ""
-          },
-          "info": {
-            "heading": "정보",
-            "rows": [
-              [
-                "이름",
-                "유경빈"
-              ],
-              [
-                "나이",
-                "24"
-              ],
-              [
-                "키",
-                "163"
               ]
             ]
           },
