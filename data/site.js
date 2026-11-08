@@ -369,7 +369,7 @@ window.SITE = {
           "image": "cqddwp8.jpg",
           "v": 1794115246684,
           "about": {
-            "heading": "소개",
+            "heading": "",
             "text": ""
           },
           "info": {
