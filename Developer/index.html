@@ -8,6 +8,7 @@
 <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="../assets/common.css">
+<script>try{var t=localStorage.getItem('lul-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <style>
 body::after {
   display: none;
@@ -723,6 +724,7 @@ legend {
         <button class="btn small primary" type="button" data-act="new">+ 새 플롯</button>
       </div>
     </div>
+    <input type="text" id="plot-q" placeholder="플롯 찾기" autocomplete="off" aria-label="플롯 찾기" style="margin-bottom: 14px">
     <ul class="plots" id="plot-list"></ul>
   </div>
 
@@ -731,7 +733,9 @@ legend {
     <form id="settings-form">
       <label>사이트 제목<input type="text" id="set-title"></label>
       <label>한 줄 문구<input type="text" id="set-sub"></label>
+      <label>공지 <small>홈 위쪽에 띄울 글이에요. 비우면 안 보여요.</small><textarea id="set-notice" style="min-height: 72px"></textarea></label>
       <label>깨진 글자 문장 <small>한 줄에 한 문장씩 적어 주세요.</small><textarea id="set-whispers"></textarea></label>
+      <label class="check"><input type="checkbox" id="set-idle">가만히 있으면 문장 떠오르기 <small>1분 30초 동안 움직임이 없으면 화면이 어두워져요.</small></label>
       <div class="field">
         <span>내 정보 <small>홈 오른쪽 위 메뉴에 보일 링크예요. 주소가 비어 있으면 안 보여요. 이메일은 주소만 적어도 돼요.</small></span>
         <div class="rows" id="set-links"></div>
@@ -744,6 +748,8 @@ legend {
   <div class="panel">
     <h2>계정</h2>
     <p class="lead">아이디·비밀번호·GitHub 토큰은 보안을 위해 웹에서 바꿀 수 없어요. 컴퓨터의 <b>web-server</b> 폴더에서 <b>setup.bat</b>을 실행해서 바꿔 주세요.</p>
+    <div class="actions" style="margin-top: 16px"><button class="btn small" type="button" data-act="backup">사이트 내용 백업 내려받기</button></div>
+    <p class="hint" id="ver" style="margin-top: 12px"></p>
   </div>
 </section>
 
@@ -754,6 +760,7 @@ legend {
     <label>주소 <small>영문·숫자·-·_ 만. 예: L → 사이트주소/L. 만든 뒤에는 바꿀 수 없어요.</small><input type="text" id="f-slug" autocomplete="off"></label>
     <label>플롯 제목 <small>홈 목록과 페이지 위쪽에 보이는 이야기 제목</small><input type="text" id="f-title" required></label>
     <label>목록 제목 <small>홈 목록에 보일 이름. 비우면 플롯 제목과 같아요.</small><input type="text" id="f-list"></label>
+    <label>태그 <small>쉼표로 나눠 적어요. 홈에서 태그별로 골라 볼 수 있어요. 예: 로맨스, 학원</small><input type="text" id="f-tags" autocomplete="off"></label>
     <label class="check"><input type="checkbox" id="f-soon">미완성 <small>홈 목록에서 흐리게 보이고 누를 수 없어요.</small></label>
 
     <div class="cast-editor">
@@ -787,7 +794,7 @@ legend {
     <fieldset>
       <legend>01</legend>
       <label>섹션 제목<input type="text" id="f-about-h"></label>
-      <label>소개글 <small>빈 줄을 넣으면 문단이 나뉘어요.</small><textarea id="f-about"></textarea></label>
+      <label>소개글 <small>빈 줄을 넣으면 문단이 나뉘어요. **굵게**, *기울임*, ||스포일러|| 를 쓸 수 있어요.</small><textarea id="f-about"></textarea></label>
     </fieldset>
 
     <fieldset>
@@ -822,6 +829,10 @@ legend {
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="admin.js"></script>
+<script>
+const adminScript = document.createElement('script');
+adminScript.src = 'admin.js?t=' + Date.now();
+document.body.appendChild(adminScript);
+</script>
 </body>
 </html>

@@ -8,7 +8,7 @@
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="assets/common.css">
-<script>document.documentElement.classList.add('js')</script>
+<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('lul-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <style>
 .top {
   padding-top: clamp(88px, 12vw, 120px);
@@ -36,7 +36,266 @@ h1 {
 }
 
 .list li {
+  position: relative;
   border-bottom: 1px solid var(--line);
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding: 14px 14px 14px 18px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 14px;
+  font-size: 15px;
+  white-space: pre-line;
+}
+
+.notice button,
+.fav,
+.tool {
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color .25s, color .25s, transform .25s var(--ease);
+}
+
+.notice button {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  color: var(--muted);
+}
+
+.notice svg,
+.fav svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tools {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.search {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  height: 48px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  transition: border-color .25s;
+}
+
+.search:focus-within {
+  border-color: var(--text);
+}
+
+.search svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.search input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+}
+
+.search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.tool {
+  grid-auto-flow: column;
+  gap: 8px;
+  flex: none;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tool:hover {
+  border-color: var(--text);
+}
+
+.tool svg {
+  width: 18px;
+  height: 18px;
+  transition: transform .5s var(--ease);
+}
+
+.tool:hover svg {
+  transform: rotate(90deg);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.filter {
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .25s, color .25s, border-color .25s;
+}
+
+.filter:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+.filter.on {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--bg);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.sorts {
+  display: flex;
+  gap: 12px;
+}
+
+.sort {
+  padding: 4px 0;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+  transition: color .25s;
+}
+
+.sort.on,
+.sort:hover {
+  color: var(--text);
+}
+
+.sort.on {
+  font-weight: 700;
+}
+
+.empty {
+  padding: 72px 0 120px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.fav {
+  position: absolute;
+  top: calc(clamp(16px, 2.5vw, 24px) + 6px);
+  left: 6px;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .42);
+  color: #ffffff;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.fav:hover {
+  transform: scale(1.1);
+}
+
+.fav.on svg {
+  fill: currentColor;
+}
+
+.new {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .06em;
+}
+
+.tags {
+  margin-top: 6px;
+  font-size: clamp(12px, 1.4vw, 14px);
+  color: var(--accent);
+}
+
+.menu-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 32px;
+}
+
+.menu-theme {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color .3s;
+}
+
+.menu-theme:hover {
+  color: var(--text);
+}
+
+.menu-theme svg {
+  width: 15px;
+  height: 15px;
 }
 
 .item {
@@ -223,10 +482,7 @@ a.item:hover .arrow {
 .menu-setting {
   display: inline-flex;
   align-items: center;
-  align-self: flex-start;
   gap: 6px;
-  margin-top: auto;
-  padding-top: 32px;
   font-size: 13px;
   color: var(--muted);
   transition: color .3s;
@@ -265,7 +521,10 @@ a.item:hover .arrow {
 <div class="menu-backdrop"></div>
 <aside class="menu" id="menu" tabindex="-1" aria-label="메뉴">
   <nav class="menu-links" id="menu-links"></nav>
+  <div class="menu-foot">
+  <button class="menu-theme" type="button" id="theme-btn"></button>
   <a class="menu-setting" href="Developer/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>설정</a>
+  </div>
 </aside>
 
 <header class="top wrap">
@@ -274,7 +533,22 @@ a.item:hover .arrow {
 </header>
 
 <main class="wrap">
+  <div class="notice" id="notice" role="note" hidden><span id="notice-text"></span><button type="button" id="notice-close" aria-label="공지 닫기"></button></div>
+  <div class="tools">
+    <label class="search"><span id="search-icon" style="display:contents"></span><input type="search" id="q" placeholder="제목, 캐릭터, 태그 검색" autocomplete="off" aria-label="플롯 검색"></label>
+    <button class="tool" type="button" id="random"></button>
+  </div>
+  <div class="filters" id="filters"></div>
+  <div class="status">
+    <span id="count"></span>
+    <div class="sorts" id="sorts">
+      <button class="sort" type="button" data-sort="">기본순</button>
+      <button class="sort" type="button" data-sort="latest">최신순</button>
+      <button class="sort" type="button" data-sort="name">가나다순</button>
+    </div>
+  </div>
   <ul class="list" id="plots"></ul>
+  <p class="empty" id="empty" hidden>찾는 플롯이 없어요.</p>
 </main>
 
 <footer class="wrap">

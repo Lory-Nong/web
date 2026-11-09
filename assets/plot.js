@@ -3,12 +3,12 @@
   const slug = document.body.dataset.plot;
   const plot = (site.plots || []).find((p) => p.slug === slug);
   const PALETTE = ['#2f6fd6', '#e0567f', '#2fa37a', '#d08a1e', '#7a5cd6', '#0a0a0a'];
-  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const { esc, rich, favs, recent, theme: siteTheme, icons, share } = window.UI;
   const paras = (text) => String(text || '')
     .split(/\n\s*\n/)
     .map((t) => t.trim())
     .filter(Boolean)
-    .map((t) => `<p>${esc(t).replace(/\n/g, '<br>')}</p>`)
+    .map((t) => `<p>${rich(t).replace(/\n/g, '<br>')}</p>`)
     .join('');
   const ink = (hex) => {
     const m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
@@ -40,13 +40,13 @@
     const info = c.info || {};
     const rows = (info.rows || []).filter((r) => r[0] || r[1]);
     if (info.heading || rows.length) {
-      parts.push(`<section class="section wrap split">${head(info.heading)}<dl class="info">${rows.map((r) => `<div class="row reveal"><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl></section>`);
+      parts.push(`<section class="section wrap split">${head(info.heading)}<dl class="info">${rows.map((r) => `<div class="row reveal"><dt>${esc(r[0])}</dt><dd>${rich(r[1])}</dd></div>`).join('')}</dl></section>`);
     }
     const quote = c.quote || {};
     if (quote.heading || quote.text) {
       parts.push(`<section class="section wrap split">${head(quote.heading)}<blockquote class="quote reveal">${paras(quote.text)}</blockquote></section>`);
     }
-    const photo = c.image ? `<div class="hero-photo reveal"><img src="${esc(c.image)}?v=${esc(c.v || 0)}" alt=""></div>` : '';
+    const photo = c.image ? `<div class="hero-photo reveal" role="button" tabindex="0" aria-label="그림 크게 보기"><img src="${esc(c.image)}?v=${esc(c.v || 0)}" alt=""></div>` : '';
     const caption = c.caption ? `<p class="caption reveal">${esc(c.caption)}</p>` : '';
     const hero = photo || caption ? `<header class="hero">${photo}${caption}</header>` : '';
     const name = c.name || plot.title;
@@ -57,7 +57,15 @@
   const nav = many
     ? `<nav class="cast" aria-label="캐릭터"><div class="cast-track" role="tablist"><span class="cast-glow" aria-hidden="true"></span>${cast.map((c, i) => `<button class="cast-pill" type="button" role="tab" data-i="${i}">${esc(c.name || `캐릭터 ${i + 1}`)}</button>`).join('')}</div></nav>`
     : '';
-  document.body.insertAdjacentHTML('afterbegin', `${nav}<div class="stage"></div><footer class="wrap"><a href="../">← 처음으로</a><span>© 2026 ${esc(plot.title)}</span></footer>`);
+  const open = (site.plots || []).filter((p) => p.slug && !p.soon);
+  const at = open.findIndex((p) => p.slug === slug);
+  const pageLink = (p, cls, label) => (p ? `<a class="${cls}" href="../${esc(p.slug)}/"><small>${label}</small><b>${esc(p.listTitle || p.title)}</b></a>` : '<span></span>');
+  const pager = open.length > 1 && at >= 0
+    ? `<nav class="pager wrap" aria-label="다른 플롯">${pageLink(open[at - 1], 'prev', '← 이전 플롯')}${pageLink(open[at + 1], 'next', '다음 플롯 →')}</nav>`
+    : '';
+  const dock = `<div class="dock"><button class="dock-btn dock-top" type="button" aria-label="맨 위로">${icons.up}</button><button class="dock-btn dock-theme" type="button" aria-label="화면 색 바꾸기"></button><button class="dock-btn dock-share" type="button" aria-label="링크 공유">${icons.share}</button><button class="dock-btn dock-fav" type="button" aria-label="즐겨찾기">${icons.heart}</button></div>`;
+  document.body.insertAdjacentHTML('afterbegin', `<div class="progress" aria-hidden="true"></div>${nav}<div class="stage"></div>${pager}<footer class="wrap"><a href="../">← 처음으로</a><span>© 2026 ${esc(plot.title)}</span></footer>${dock}<div class="lightbox" aria-hidden="true"><img alt=""></div>`);
+  recent.add(slug);
 
   const stage = document.querySelector('.stage');
   const track = document.querySelector('.cast-track');
@@ -135,13 +143,86 @@
 
   render(fromHash());
 
+  const progress = document.querySelector('.progress');
+  const topBtn = document.querySelector('.dock-top');
+  let ticking = false;
+  const onScroll = () => {
+    ticking = false;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progress.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+    topBtn.classList.toggle('on', scrollY > 500);
+  };
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(onScroll);
+  }, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+  topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  const favBtn = document.querySelector('.dock-fav');
+  const paintFav = (on) => {
+    favBtn.classList.toggle('on', on);
+    favBtn.setAttribute('aria-pressed', String(on));
+  };
+  paintFav(favs.has(slug));
+  favBtn.addEventListener('click', () => {
+    const on = favs.toggle(slug);
+    paintFav(on);
+    window.UI.toast(on ? '즐겨찾기에 넣었어요.' : '즐겨찾기에서 뺐어요.');
+  });
+
+  document.querySelector('.dock-share').addEventListener('click', () => share(document.title));
+
+  const themeBtn = document.querySelector('.dock-theme');
+  const paintTheme = () => {
+    themeBtn.innerHTML = siteTheme.current() === 'dark' ? icons.sun : icons.moon;
+  };
+  paintTheme();
+  themeBtn.addEventListener('click', () => {
+    siteTheme.toggle();
+    paintTheme();
+  });
+
+  const box = document.querySelector('.lightbox');
+  const boxImg = box.querySelector('img');
+  const closeBox = () => box.classList.remove('on');
+  const openBox = (src) => {
+    boxImg.src = src;
+    box.classList.add('on');
+  };
+  box.addEventListener('click', closeBox);
+  const toggleSpoiler = (el) => el.classList.toggle('open');
+  stage.addEventListener('click', (e) => {
+    const spoiler = e.target.closest('.spoiler');
+    if (spoiler) {
+      toggleSpoiler(spoiler);
+      return;
+    }
+    const photo = e.target.closest('.hero-photo');
+    if (photo) openBox(photo.querySelector('img').src);
+  });
+  stage.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const spoiler = e.target.closest('.spoiler');
+    const photo = e.target.closest('.hero-photo');
+    if (!spoiler && !photo) return;
+    e.preventDefault();
+    if (spoiler) toggleSpoiler(spoiler);
+    else openBox(photo.querySelector('img').src);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeBox();
+  });
+
   if (many) {
     track.addEventListener('click', (e) => {
       const pill = e.target.closest('.cast-pill');
       if (pill) go(Number(pill.dataset.i));
     });
     document.addEventListener('keydown', (e) => {
-      if (e.target.closest('input, textarea, select') || e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.target.closest('input, textarea, select') || e.altKey || e.ctrlKey || e.metaKey || box.classList.contains('on')) return;
       if (e.key === 'ArrowRight') go(current + 1);
       if (e.key === 'ArrowLeft') go(current - 1);
     });

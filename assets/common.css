@@ -14,7 +14,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #000000;
     --text: #f5f5f5;
     --muted: #9a9a9a;
@@ -25,7 +25,78 @@
     --photo-c: #1f1f1f;
     --haze: rgba(0, 0, 0, .45);
     --grain: .09;
+    color-scheme: dark;
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: #000000;
+  --text: #f5f5f5;
+  --muted: #9a9a9a;
+  --accent: #6ea8ff;
+  --line: #262626;
+  --photo-a: #141414;
+  --photo-b: #0a0a0a;
+  --photo-c: #1f1f1f;
+  --haze: rgba(0, 0, 0, .45);
+  --grain: .09;
+  color-scheme: dark;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.theming * {
+  transition: background-color .4s, color .4s, border-color .4s !important;
+}
+
+.ui-toast {
+  position: fixed;
+  left: 50%;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 130;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 12px 20px;
+  border-radius: 16px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .22);
+  opacity: 0;
+  transform: translate(-50%, calc(100% + 40px));
+  transition: transform .6s cubic-bezier(.2, .9, .25, 1.14), opacity .35s var(--ease);
+  pointer-events: none;
+}
+
+.ui-toast.on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.veil {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: rgba(0, 0, 0, .76);
+  color: #ffffff;
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .4s var(--ease);
+}
+
+.veil.on {
+  opacity: 1;
+  transition: opacity 3.5s var(--ease);
 }
 
 * {

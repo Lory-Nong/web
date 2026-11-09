@@ -1,3 +1,4 @@
+const VERSION = '2026-11-09 기능 추가';
 const SERVER = 'https://lul-admin.igm12345678a.workers.dev';
 const KEY = 'lul-admin-session';
 const DEFAULT_WHISPERS = ['깨어나', '여기는 꿈이 아니야', '누가 보고 있어', '돌아갈 수 없어', '아직 거기 있니', '문을 열지 마', '너를 기억하고 있어', '눈을 감아'];
@@ -136,6 +137,7 @@ const readSite = async () => {
   const data = text.trim() ? JSON.parse(text.replace(/^\s*window\.SITE\s*=\s*/, '').replace(/;\s*$/, '')) : {};
   data.title = data.title || '';
   data.subtitle = data.subtitle || '';
+  data.notice = data.notice || '';
   data.whispers = Array.isArray(data.whispers) ? data.whispers : [];
   data.plots = Array.isArray(data.plots) ? data.plots : [];
   data.links = Array.isArray(data.links) ? data.links : [];
@@ -250,6 +252,8 @@ const renderDash = () => {
         <div class="tools">
           <button class="icon" type="button" data-act="up" aria-label="위로">↑</button>
           <button class="icon" type="button" data-act="down" aria-label="아래로">↓</button>
+          ${p.slug && !p.soon ? `<a class="btn small" href="../${encodeURIComponent(p.slug)}/" target="_blank" rel="noopener">보기</a>` : ''}
+          <button class="btn small" type="button" data-act="dup">복제</button>
           <button class="btn small" type="button" data-act="edit">수정</button>
           <button class="btn small" type="button" data-act="del">삭제</button>
         </div>
@@ -257,8 +261,12 @@ const renderDash = () => {
     }).join('')
     : '<li class="empty">아직 플롯이 없어요.</li>';
   $('#order-save').hidden = true;
+  $('#ver').textContent = `관리자 버전 ${VERSION}`;
   $('#set-title').value = site.title;
   $('#set-sub').value = site.subtitle;
+  $('#set-notice').value = site.notice;
+  $('#set-idle').checked = site.idle !== false;
+  $('#plot-q').value = '';
   $('#set-whispers').value = (site.whispers.length ? site.whispers : DEFAULT_WHISPERS).join('\n');
   $('#set-links').innerHTML = '';
   site.links.forEach((l) => addRow('#set-links', l.label, l.url, LINK_PH));
@@ -346,6 +354,7 @@ const openEditor = (plot) => {
   $('#f-slug').readOnly = Boolean(plot && plot.slug);
   $('#f-title').value = plot ? plot.title || '' : '';
   $('#f-list').value = plot ? plot.listTitle || '' : '';
+  $('#f-tags').value = plot && Array.isArray(plot.tags) ? plot.tags.join(', ') : '';
   $('#f-soon').checked = Boolean(plot && plot.soon);
   fillChar();
   dirty = false;
@@ -393,6 +402,8 @@ $('#settings-form').addEventListener('submit', (e) => {
   run(e.submitter || $('#settings-form button'), '저장 중', () => save('사이트 설정 변경', (fresh) => {
     fresh.title = $('#set-title').value.trim();
     fresh.subtitle = $('#set-sub').value.trim();
+    fresh.notice = $('#set-notice').value.trim();
+    fresh.idle = $('#set-idle').checked;
     fresh.whispers = $('#set-whispers').value.split('\n').map((s) => s.trim()).filter(Boolean);
     fresh.links = [...document.querySelectorAll('#set-links .pair')]
       .map((r) => ({ label: r.querySelector('.k').value.trim(), url: r.querySelector('.v').value.trim() }))
@@ -435,6 +446,13 @@ picker.addEventListener('drop', (e) => {
   useImage(e.dataTransfer.files[0]);
 });
 
+$('#plot-q').addEventListener('input', (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('#plot-list li[data-id]').forEach((li) => {
+    li.hidden = Boolean(q) && !li.textContent.toLowerCase().includes(q);
+  });
+});
+
 $('#edit-form').addEventListener('input', (e) => {
   dirty = true;
   if (e.target.id === 'f-name') {
@@ -456,6 +474,7 @@ $('#edit-form').addEventListener('submit', (e) => {
     slug: $('#f-slug').value.trim(),
     title: $('#f-title').value.trim(),
     listTitle: $('#f-list').value.trim(),
+    tags: [...new Set($('#f-tags').value.split(',').map((t) => t.trim().replace(/^#/, '')).filter(Boolean))],
     soon: $('#f-soon').checked
   };
   const id = editing ? editing.id : rid();
@@ -515,7 +534,7 @@ $('#edit-form').addEventListener('submit', (e) => {
           if (c.image && !keep.has(c.image)) files.push({ path: `${before.slug}/${c.image}`, content: null });
         }
       }
-      const plot = { id, ...data, image: cast[0].image, v: cast[0].v, characters: cast };
+      const plot = { id, ...data, image: cast[0].image, v: cast[0].v, characters: cast, createdAt: before ? before.createdAt : Date.now(), updatedAt: Date.now() };
       if (index >= 0) fresh.plots[index] = plot;
       else fresh.plots.push(plot);
       return files;
@@ -551,6 +570,32 @@ document.addEventListener('click', (e) => {
   if (act === 'new') openEditor(null);
   if (act === 'back') leaveEditor();
   if (act === 'edit' && plot) openEditor(plot);
+  if (act === 'dup' && plot) {
+    openEditor(plot);
+    editing = null;
+    draft.forEach((c) => {
+      c.id = rid();
+      c.image = '';
+      c.v = 0;
+    });
+    $('#edit-title').textContent = '플롯 복제';
+    $('#f-slug').value = '';
+    $('#f-slug').readOnly = false;
+    $('#f-title').value = `${plot.title || ''} 복사본`;
+    fillChar();
+    dirty = true;
+    $('#f-slug').focus();
+    toast('글만 복사했어요. 주소를 새로 적고, 그림은 다시 올려 주세요.');
+  }
+  if (act === 'backup' && site) {
+    const url = URL.createObjectURL(new Blob([JSON.stringify(site, null, 2)], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `lul-site-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast('백업 파일을 내려받았어요.');
+  }
   if (act === 'row-add') {
     addRow('#f-rows');
     dirty = true;

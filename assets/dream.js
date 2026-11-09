@@ -67,6 +67,25 @@ document.addEventListener('dream:refresh', () => {
   document.querySelectorAll('h1, h2, h3, p, dd').forEach((el) => zone.observe(el));
 });
 
+if (!window.SITE || window.SITE.idle !== false) {
+  const veil = document.createElement('div');
+  veil.className = 'veil';
+  veil.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(veil);
+  let idleTimer = null;
+  const arm = () => {
+    veil.classList.remove('on');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      if (calm.matches || document.hidden || document.body.classList.contains('menu-open')) return arm();
+      veil.textContent = pick(whispers);
+      veil.classList.add('on');
+    }, 90000);
+  };
+  ['pointermove', 'pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((name) => window.addEventListener(name, arm, { passive: true }));
+  arm();
+}
+
 setInterval(() => {
   const now = performance.now();
   if (busy || calm.matches || document.hidden || now - last < 6000) return;

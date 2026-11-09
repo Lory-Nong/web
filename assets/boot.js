@@ -8,7 +8,13 @@
     s.onerror = resolve;
     document.body.appendChild(s);
   });
+  try {
+    const theme = localStorage.getItem('lul-theme');
+    if (theme) document.documentElement.dataset.theme = theme;
+  } catch {}
+  const minute = Math.floor(Date.now() / 60000);
   load(root + 'data/site.js?t=' + Date.now())
-    .then(() => load(root + 'assets/' + view + '.js'))
-    .then(() => load(root + 'assets/dream.js'));
+    .then(() => load(root + 'assets/ui.js?v=' + minute))
+    .then(() => load(root + 'assets/' + view + '.js?v=' + minute))
+    .then(() => load(root + 'assets/dream.js?v=' + minute));
 })();
